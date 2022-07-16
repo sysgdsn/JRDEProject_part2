@@ -1,5 +1,5 @@
 
-# JR DE Project Part 2 - Prepared By SHI YUN 
+# JR DE Project Part 2
 ## Q1
 Create a table called order_products_prior by using the last SQL query you created from the previous assignment. It should be similar to below (note you need to replace the s3 bucket name “imba” to yours own bucket name):
 
