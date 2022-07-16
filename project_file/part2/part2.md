@@ -33,51 +33,15 @@ Create a SQL query (user_features_2). Similar to above, based on table order_pro
 
 
 ```SQL
-SELECT
-T1.user_id,
-T1.total_number_of_products,
-T1.total_number_of_distinct_products,
-T2.ratio
-
-FROM
-
-(SELECT 
+SELECT 
 user_id,
 count(product_id) AS total_number_of_products,
-count(DISTINCT product_id) AS total_number_of_distinct_products
+count(DISTINCT product_id) AS total_number_of_distinct_products,
+ROUND(CAST((COUNT(if(reordered=1,1,NULL))) AS DOUBLE) / COUNT(if(order_number>1,1,NULL)),3)  AS ratio
 
 FROM "prd"."order_products_prior" 
 GROUP BY user_id
-ORDER BY user_id) AS T1
-
-JOIN
-
-(SELECT 
-a.user_id,
-Round(CAST(a.reordered_number AS DOUBLE)/CAST(b.order_number AS DOUBLE),3) AS ratio
-
-FROM 
-(SELECT 
-user_id,
-count(reordered) AS reordered_number
-FROM "prd"."order_products_prior" 
-WHERE reordered = 1
-GROUP BY user_id) AS a
-
-JOIN
-(SELECT 
-user_id,
-count(order_number) AS order_number
-FROM "prd"."order_products_prior"  
-WHERE order_number > 1
-GROUP BY user_id
-ORDER BY user_id) AS b
-
-ON a.user_id = b.user_id
-ORDER BY a.user_id) AS T2
-
-ON T1.user_id = T2.user_id
-ORDER BY T1.user_id
+ORDER BY user_id
 ```
 
 ## Q4
